@@ -64,5 +64,12 @@ public class EnemyBehavior : MonoBehaviour
                 Debug.Log("El jugador ha sido destruido.");
             }
         }
+
+        // Detectar si colisiona con el collider de ataque del mago
+        if (other.CompareTag("ColisionAtaque"))
+        {
+            Destroy(gameObject); // Destruye el murciélago al ser golpeado por el ataque
+            Debug.Log("El murciélago ha sido destruido por el ataque.");
+        }
     }
 }
