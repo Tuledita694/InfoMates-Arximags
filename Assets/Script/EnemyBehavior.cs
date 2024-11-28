@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyBehavior : MonoBehaviour
 {
     public GameObject player;
-    public float speed = 2f;
+    public float speed = 4  f;
     private int hitCount = 0;
     private const int maxHits = 3;
     public float separationRadius = 1f; // Radio de separación entre enemigos
