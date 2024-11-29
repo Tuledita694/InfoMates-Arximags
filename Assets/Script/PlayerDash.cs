@@ -26,7 +26,7 @@ public class PlayerDash : MonoBehaviour
         dashDirection = new Vector2(moveX, moveY).normalized;
 
         // Iniciar el dash cuando se presiona J y no está en cooldown
-        if (Input.GetKeyDown(KeyCode.J) && !isDashing && Time.time >= lastDashTime + dashCooldown && dashDirection != Vector2.zero)
+        if (Input.GetKeyDown(KeyCode.Space) && !isDashing && Time.time >= lastDashTime + dashCooldown && dashDirection != Vector2.zero)
         {
             StartDash();
         }
