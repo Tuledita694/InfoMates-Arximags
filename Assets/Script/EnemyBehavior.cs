@@ -11,6 +11,13 @@ public class EnemyBehavior : MonoBehaviour
     public float separationRadius = 1f; // Radio de separación entre enemigos
     public float separationForce = 1f; // Fuerza de separación
 
+    private List<GameObject> hearts = new List<GameObject>();    // Corazones rojos
+    private List<GameObject> noHearts = new List<GameObject>(); // Corazones grises
+
+
+    private AudioSource audioSource; // Componente AudioSource para reproducir el sonido
+    public AudioClip golpeSound; // Aud
+
     void Start()
     {
         if (transform.localScale != new Vector3(1f, 1f, 1f))
@@ -27,7 +34,19 @@ public class EnemyBehavior : MonoBehaviour
                 return;
             }
         }
+
+
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            // Si no hay AudioSource, agregar uno dinámicamente
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        // Cargar el sonido golpe.mp3
+        golpeSound = Resources.Load<AudioClip>("golpe"); // Asegúrate de que el archivo está en Resources
     }
+    
 
     void Update()
     {
@@ -58,22 +77,78 @@ public class EnemyBehavior : MonoBehaviour
     {
         if (other.gameObject.name == "idle1pjprincipal_0")
         {
-            hitCount++;
-            Debug.Log("Enemigo ha golpeado al jugador. Golpes: " + hitCount);
-
-            if (hitCount >= maxHits)
+            if (hitCount < maxHits)
             {
-                Destroy(other.gameObject);
-                Debug.Log("El jugador ha sido destruido.");
+                hitCount++;
+
+                // Reproducir el sonido de golpe
+               
+                
+                    // Reproducir el sonido
+                
+
+                // Destruir los objetos según el golpe (heart, heart2, heart3)
+                if (hitCount == 1)
+                {
+                    GameObject heart = GameObject.Find("heart");
+                    if (heart != null)
+                    {
+                        Renderer heartRenderer = heart.GetComponent<Renderer>();
+                        if (heartRenderer != null)
+                        {
+                            audioSource.PlayOneShot(golpeSound);
+                            heartRenderer.enabled = false; // Desactiva el renderizado, haciendo el objeto invisible
+
+                        }
+                        Debug.Log("El objeto 'heart' ha sido hecho invisible.");
+                    }
+                }
+                else if (hitCount == 2)
+                {
+                    GameObject heart2 = GameObject.Find("heart2");
+                    if (heart2 != null)
+                    {
+                        Renderer heart2Renderer = heart2.GetComponent<Renderer>();
+                        if (heart2Renderer != null)
+                        {
+                            audioSource.PlayOneShot(golpeSound);
+                            heart2Renderer.enabled = false; // Desactiva el renderizado, haciendo el objeto invisible
+                        }
+                        Debug.Log("El objeto 'heart2' ha sido hecho invisible.");
+                    }
+                }
+                else if (hitCount == 3)
+                {
+                    GameObject heart3 = GameObject.Find("heart3");
+                    if (heart3 != null)
+                    {
+                        Renderer heart3Renderer = heart3.GetComponent<Renderer>();
+                        if (heart3Renderer != null)
+                        {
+                            audioSource.PlayOneShot(golpeSound);
+                            heart3Renderer.enabled = false; // Desactiva el renderizado, haciendo el objeto invisible
+                        }
+                        Debug.Log("El objeto 'heart3' ha sido hecho invisible.");
+                    }
+                }
+
+
+                if (hitCount >= maxHits)
+                {
+                    Destroy(other.gameObject); // Destruir al jugador
+                    Debug.Log("El jugador ha sido destruido.");
+                }
+            }
+
+            if (other.CompareTag("ColisionAtaque"))
+            {
+                Destroy(gameObject);
+                Debug.Log("El enemigo ha sido destruido.");
             }
         }
-
-        if (other.CompareTag("ColisionAtaque"))
-        {
-            Destroy(gameObject);
-            Debug.Log("El murciélago ha sido destruido por el ataque.");
-        }
     }
+
+
 
     private Vector3 GetSeparationVector()
     {
