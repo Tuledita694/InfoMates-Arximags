@@ -4,9 +4,12 @@ using TMPro;
 public class InteractuarCofre : MonoBehaviour
 {
     public GameObject VentanaMates; // Referencia al Canvas
-    public TMP_Text mathText;      // Referencia al texto de la operación
+    public TMP_Text mathText;       // Referencia al texto de la operación
     public TMP_InputField answerField; // Campo de entrada
-    public TMP_Text feedbackText;  // Texto de feedback (opcional)
+    public TMP_Text feedbackText;   // Texto de feedback (opcional)
+
+    public GameObject gema1;        // Referencia al objeto "gema1"
+    public GameObject Cofre1;       // Referencia al objeto "Cofre1" (este objeto)
 
     private bool isPlayerNear = false;
     private int correctAnswer;
@@ -53,7 +56,7 @@ public class InteractuarCofre : MonoBehaviour
 
     void GenerateMathOperation()
     {
-        // Generar dos números aleatorios
+        // Asegurarnos de que la operación sea válida generando nuevos números cada vez
         int a = Random.Range(1, 20);
         int b = Random.Range(1, 20);
         int operation = Random.Range(0, 4); // 0: suma, 1: resta, 2: multiplicación, 3: división
@@ -75,13 +78,15 @@ public class InteractuarCofre : MonoBehaviour
                 mathText.text = $"¿Cuánto es {a} × {b}?";
                 break;
             case 3: // División
-                // Asegurarnos de que la división sea exacta
+                // Asegurarnos de que la división sea exacta y evitar división por 0
                 b = Random.Range(1, 10); // Limitar b para divisiones más sencillas
                 a = b * Random.Range(1, 10); // Generar un múltiplo de b
                 correctAnswer = a / b;
                 mathText.text = $"¿Cuánto es {a} ÷ {b}?";
                 break;
         }
+
+        Debug.Log($"La respuesta correcta es: {correctAnswer}");
     }
 
     public void CheckAnswer()
@@ -109,10 +114,11 @@ public class InteractuarCofre : MonoBehaviour
             {
                 feedbackText.text = "¡Correcto!";
                 CloseMathMenu();
+                ShowGema();
             }
             else
             {
-                feedbackText.text = "Respuesta incorrecta. Aquí tienes otra operación:";
+                feedbackText.text = "Respuesta incorrecta.";
                 GenerateMathOperation();
                 answerField.text = "";
             }
@@ -124,11 +130,23 @@ public class InteractuarCofre : MonoBehaviour
         }
     }
 
-
-
     public void ApretarBoton()
     {
-        CheckAnswer(); // Llama al método CheckAnswer para validar la respuesta del jugador
+        CheckAnswer();
     }
 
+    void ShowGema()
+    {
+        if (Cofre1 != null)
+        {
+            Cofre1.SetActive(false); // Desactiva el objeto "Cofre1"
+            Debug.Log("Cofre1 desactivado.");
+        }
+
+        if (gema1 != null)
+        {
+            gema1.SetActive(true);  // Activa el objeto "gema1"
+            Debug.Log("Gema1 activada.");
+        }
+    }
 }
