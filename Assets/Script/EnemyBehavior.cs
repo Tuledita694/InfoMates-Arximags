@@ -9,6 +9,7 @@ public class EnemyBehavior : MonoBehaviour
     public float speed = 4f;
     private int hitCount = 0;
     private const int maxHits = 3;
+    private float speedInit;
     public float separationRadius = 1f; // Radio de separación entre enemigos
     public float separationForce = 1f; // Fuerza de separación
 
@@ -17,9 +18,11 @@ public class EnemyBehavior : MonoBehaviour
 
     private AudioSource audioSource; // Componente AudioSource para reproducir el sonido
     public AudioClip golpeSound; // Aud
+    public bool playerIsComputing = false;
 
     void Start()
     {
+        speedInit = speed;
         if (transform.localScale != new Vector3(1f, 1f, 1f))
         {
             transform.localScale = new Vector3(1f, 1f, 1f);
@@ -48,26 +51,34 @@ public class EnemyBehavior : MonoBehaviour
 
     void Update()
     {
-        if (player != null)
+        if (!playerIsComputing)
         {
-            // Dirección hacia el jugador
-            Vector3 direction = (player.transform.position - transform.position).normalized;
-
-            // Ajustar posición con separación
-            Vector3 separation = GetSeparationVector();
-            Vector3 finalDirection = direction + separation;
-
-            transform.position += finalDirection.normalized * speed * Time.deltaTime;
-
-            // Voltear sprite
-            if (direction.x < 0)
+            speed = speedInit;
+            if (player != null)
             {
-                transform.localScale = new Vector3(-1f, 1f, 1f);
+                // Dirección hacia el jugador
+                Vector3 direction = (player.transform.position - transform.position).normalized;
+
+                // Ajustar posición con separación
+                Vector3 separation = GetSeparationVector();
+                Vector3 finalDirection = direction + separation;
+
+                transform.position += finalDirection.normalized * speed * Time.deltaTime;
+
+                // Voltear sprite
+                if (direction.x < 0)
+                {
+                    transform.localScale = new Vector3(-1f, 1f, 1f);
+                }
+                else if (direction.x > 0)
+                {
+                    transform.localScale = new Vector3(1f, 1f, 1f);
+                }
             }
-            else if (direction.x > 0)
-            {
-                transform.localScale = new Vector3(1f, 1f, 1f);
-            }
+        }
+        else
+        {
+            speed = 0f;
         }
     }
 

@@ -1,5 +1,7 @@
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
+using Unity.Collections;
 
 public class InteractuarCofre : MonoBehaviour
 {
@@ -10,10 +12,21 @@ public class InteractuarCofre : MonoBehaviour
 
     public GameObject gema1;        // Referencia al objeto "gema1"
     public GameObject Cofre1;       // Referencia al objeto "Cofre1" (este objeto)
+    public List <EnemyBehavior> enemyBehavior = new List<EnemyBehavior>();
 
     private bool isPlayerNear = false;
-    private int correctAnswer;
+    public int correctAnswer;
 
+    private void Start()
+    {
+        EnemyBehavior[] encontrados = FindObjectsOfType<EnemyBehavior>();
+        foreach (EnemyBehavior script in encontrados)
+        {
+            enemyBehavior.Add(script);
+            Debug.Log("Encontrado: " + script.gameObject.name);
+        }
+        GenerateMathOperation();
+    }
     void Update()
     {
         if (isPlayerNear && Input.GetKeyDown(KeyCode.E))
@@ -43,14 +56,22 @@ public class InteractuarCofre : MonoBehaviour
     void OpenMathMenu()
     {
         VentanaMates.SetActive(true);
-        Time.timeScale = 0;
-        GenerateMathOperation();
+        for (int i =0; i < enemyBehavior.Count; i++)
+        {
+            enemyBehavior[i].playerIsComputing = true;
+        }
+       // GenerateMathOperation();
+       // Time.timeScale = 0;
     }
 
     public void CloseMathMenu()
     {
         VentanaMates.SetActive(false);
-        Time.timeScale = 1;
+        //Time.timeScale = 1;
+        for (int i = 0; i < enemyBehavior.Count; i++)
+        {
+            enemyBehavior[i].playerIsComputing = false;
+        }
         feedbackText.text = "";
     }
 
