@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;  // Para cargar la escena
 
 public class EnemyBehavior : MonoBehaviour
 {
@@ -13,7 +14,6 @@ public class EnemyBehavior : MonoBehaviour
 
     private List<GameObject> hearts = new List<GameObject>();    // Corazones rojos
     private List<GameObject> noHearts = new List<GameObject>(); // Corazones grises
-
 
     private AudioSource audioSource; // Componente AudioSource para reproducir el sonido
     public AudioClip golpeSound; // Aud
@@ -35,7 +35,6 @@ public class EnemyBehavior : MonoBehaviour
             }
         }
 
-
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
@@ -46,7 +45,6 @@ public class EnemyBehavior : MonoBehaviour
         // Cargar el sonido golpe.mp3
         golpeSound = Resources.Load<AudioClip>("golpe"); // Asegúrate de que el archivo está en Resources
     }
-    
 
     void Update()
     {
@@ -82,10 +80,7 @@ public class EnemyBehavior : MonoBehaviour
                 hitCount++;
 
                 // Reproducir el sonido de golpe
-               
-                
-                    // Reproducir el sonido
-                
+                audioSource.PlayOneShot(golpeSound);
 
                 // Destruir los objetos según el golpe (heart, heart2, heart3)
                 if (hitCount == 1)
@@ -96,11 +91,8 @@ public class EnemyBehavior : MonoBehaviour
                         Renderer heartRenderer = heart.GetComponent<Renderer>();
                         if (heartRenderer != null)
                         {
-                            audioSource.PlayOneShot(golpeSound);
                             heartRenderer.enabled = false; // Desactiva el renderizado, haciendo el objeto invisible
-
                         }
-                        Debug.Log("El objeto 'heart' ha sido hecho invisible.");
                     }
                 }
                 else if (hitCount == 2)
@@ -111,10 +103,8 @@ public class EnemyBehavior : MonoBehaviour
                         Renderer heart2Renderer = heart2.GetComponent<Renderer>();
                         if (heart2Renderer != null)
                         {
-                            audioSource.PlayOneShot(golpeSound);
                             heart2Renderer.enabled = false; // Desactiva el renderizado, haciendo el objeto invisible
                         }
-                        Debug.Log("El objeto 'heart2' ha sido hecho invisible.");
                     }
                 }
                 else if (hitCount == 3)
@@ -125,18 +115,20 @@ public class EnemyBehavior : MonoBehaviour
                         Renderer heart3Renderer = heart3.GetComponent<Renderer>();
                         if (heart3Renderer != null)
                         {
-                            audioSource.PlayOneShot(golpeSound);
                             heart3Renderer.enabled = false; // Desactiva el renderizado, haciendo el objeto invisible
                         }
-                        Debug.Log("El objeto 'heart3' ha sido hecho invisible.");
                     }
                 }
 
-
+                // Cuando el jugador ha sido golpeado tres veces, se destruye
                 if (hitCount >= maxHits)
                 {
-                    Destroy(other.gameObject); // Destruir al jugador
+                    // Destruir al jugador
+                    Destroy(other.gameObject);
                     Debug.Log("El jugador ha sido destruido.");
+
+                    // Llamar a la función para cargar la pantalla de GameOver después de 3 segundos
+                    StartCoroutine(CargarPantallaGameOver());
                 }
             }
 
@@ -148,7 +140,14 @@ public class EnemyBehavior : MonoBehaviour
         }
     }
 
+    private IEnumerator CargarPantallaGameOver()
+    {
+        // Esperar 3 segundos antes de cargar la escena de GameOver
+        yield return new WaitForSeconds(3f);
 
+        // Cargar la escena de GameOver
+        SceneManager.LoadScene("GameOver");
+    }
 
     private Vector3 GetSeparationVector()
     {

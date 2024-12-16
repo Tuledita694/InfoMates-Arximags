@@ -8,6 +8,7 @@ TagManager:
   - Heart
   - NoHeart
   - CofreTrigger
+  - Gema
   layers:
   - Default
   - TransparentFX
