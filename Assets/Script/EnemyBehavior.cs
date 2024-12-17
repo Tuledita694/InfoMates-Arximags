@@ -9,7 +9,6 @@ public class EnemyBehavior : MonoBehaviour
     public float speed = 4f;
     private int hitCount = 0;
     private const int maxHits = 3;
-    private float speedInit;
     public float separationRadius = 1f; // Radio de separación entre enemigos
     public float separationForce = 1f; // Fuerza de separación
 
@@ -19,6 +18,8 @@ public class EnemyBehavior : MonoBehaviour
     private AudioSource audioSource; // Componente AudioSource para reproducir el sonido
     public AudioClip golpeSound; // Aud
     public bool playerIsComputing = false;
+    public float speedInit; // Ahora es pública
+
 
     void Start()
     {

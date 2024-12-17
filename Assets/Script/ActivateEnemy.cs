@@ -7,15 +7,35 @@ public class ActivateEnemy : MonoBehaviour
     // Asigna el enemigo en el inspector de Unity
     public GameObject enemyToActivate;
 
-    // Detecta si el personaje entra en el activador
+    // Referencias al SpriteRenderer y al script EnemyBehavior
+    private SpriteRenderer enemySpriteRenderer;
+    private EnemyBehavior enemyBehavior;
+
+    private void Start()
+    {
+        if (enemyToActivate != null)
+        {
+            enemySpriteRenderer = enemyToActivate.GetComponent<SpriteRenderer>();
+            enemyBehavior = enemyToActivate.GetComponent<EnemyBehavior>();
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player")) // Asegúrate de que el personaje tiene el tag "Player"
+        if (other.CompareTag("Player"))
         {
-            // Activa el enemigo
-            if (enemyToActivate != null)
+            // Habilitar el SpriteRenderer
+            if (enemySpriteRenderer != null)
             {
-                enemyToActivate.SetActive(true);
+                enemySpriteRenderer.enabled = true;
+            }
+
+            // Cambiar la velocidad a 3 y actualizar speedInit
+            if (enemyBehavior != null)
+            {
+                enemyBehavior.speed = 3f;
+                enemyBehavior.speedInit = 3f;
+                enemyBehavior.playerIsComputing = false;
             }
         }
     }
